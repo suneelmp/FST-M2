@@ -1,0 +1,23 @@
+-- Drop Table
+DROP TABLE employee;
+
+-- Create the employee table with
+CREATE TABLE employee (id INT, name STRING, dept STRING, yoj INT, salary INT)
+-- Add formatting for CSV data
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+-- To skip the first line from the CSV file
+TBLPROPERTIES ("skip.header.line.count"="1");
+
+-- Load the data from the CSV file
+LOAD DATA LOCAL INPATH '/root/empData.csv'
+INTO TABLE employee;
+
+-- Exports to HDFS directory
+INSERT OVERWRITE DIRECTORY '/user/root/output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM employee WHERE dept='IT';
+
+-- Exports to LOCAL directory
+INSERT OVERWRITE LOCAL DIRECTORY '/root/result' 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM employee WHERE yoj=2022;
